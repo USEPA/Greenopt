@@ -1,12 +1,12 @@
 # Greenopt
 
 Why use greenopt?
--	Greenopt was designed to help decision-makers incorporate green infrastructure (GI) into their water resources management plans while considering conflicting management objectives such as: 
-  - minimizing nutrient, sediment, and heavy metal loads (referred to here as pollutants)
-  - minimize negative impacts of stormwater runoff such as erosion, and
-  - minimize capital costs and maintenance costs. 
--	More precisely, greenopt facilitates a comprehensive understanding of the tradeoffs between conflicting management objectives by depicting the extent to which different candidate management plans are able to satisfy such objectives.  
-  - In other words, the inflection points and tradeoffs in a solution set (of management plan options) represent valuable information for decision-makers. For instance, greenopt can help answer questions such as, “At what degree of GI implementation is reducing nutrient load most cost-effective?” Or, “On which hydrologic response units (HRUs) should GI be implemented to achieve highest loading reductions per unit GI?” 
+* Greenopt was designed to help decision-makers incorporate green infrastructure (GI) into their water resources management plans while considering conflicting management objectives such as: 
+  * minimizing nutrient, sediment, and heavy metal loads (referred to here as pollutants)
+  * minimize negative impacts of stormwater runoff such as erosion, and
+  * minimize capital costs and maintenance costs. 
+* More precisely, greenopt facilitates a comprehensive understanding of the tradeoffs between conflicting management objectives by    depicting the extent to which different candidate management plans are able to satisfy such objectives.  
+  * In other words, the inflection points and tradeoffs in a solution set (of management plan options) represent valuable information for decision-makers. For instance, greenopt can help answer questions such as, “At what degree of GI implementation is reducing nutrient load most cost-effective?” Or, “On which hydrologic response units (HRUs) should GI be implemented to achieve highest loading reductions per unit GI?” 
 
 Simulation / optimization for decision-support:
 -	This decision-support tool simulates changes in runoff and pollutant load with implementation of GI to evaluate the impact of different candidate plans on the management objectives. 
