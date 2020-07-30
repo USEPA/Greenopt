@@ -5,34 +5,16 @@ from borg import *
 import calcs
 import numpy as np
 import math
-import pandas as pd
 import pickle
 import par
 import write
 
-use = open("pickleobj.obj", 'rb')
+use = open("pickleobj_baseline.obj", 'rb')
 HRU_ID = pickle.load(use)
 GI_ID = pickle.load(use)
 nyears = pickle.load(use)
 loadreduced_totyears = pickle.load(use)
 flowdiff_totyears = pickle.load(use)
-
-#GI_ID = ['Biofiltration w/UD', 'Sand Filter w/UD', 'Biofiltration w/UD', 'Sand Filter w/UD']
-#msnames =['HRU1B_m0', 'HRU2B_m0', 'HRU3B_m0', 'HRU4B_m0', 'HRU5B_m0', 'HRU6B_m0', 'HRU7B_m0', 'HRU8B_m0', 'HRU1B_m1', 'HRU2B_m1', 'HRU3B_m1', 'HRU4B_m1', 'HRU5B_m1', 'HRU6B_m1', 'HRU7B_m1', 'HRU8B_m1', 'HRU1B_m2', 'HRU2B_m2', 'HRU3B_m2', 'HRU4B_m2', 'HRU5B_m2', 'HRU6B_m2', 'HRU7B_m2', 'HRU8B_m2', 'HRU1B_m3', 'HRU2B_m3', 'HRU3B_m3', 'HRU4B_m3', 'HRU5B_m3', 'HRU6B_m3', 'HRU7B_m3', 'HRU8B_m3']
-#runred10 = [6.906139, 7.149906, 27.643884, 119.434894, 4.090303, 4.078351, 14.055731, 42.751247, 6.918703, 7.161611, 27.704689, 119.748803, 4.312163, 4.29614, 14.498194,  45.333763, 9.691565, 10.022812, 37.651649,  161.910344, 7.781426, 7.79629, 26.43928, 90.901932, 9.692647, 10.024243, 37.670989, 162.429237, 8.083145, 8.119908, 27.26221,  93.698384]
-# flowdiff_totyears = pd.DataFrame(runred10, index=msnames)
-#
-# loadreduced_totyears = [0.0014531177688268226, 2.9381913709070697, 34.544858862676129, 197.73904417934449, 0.031631062242708473, 2.1125280119628873, 29.192159695001351, 196.19853240498887,
-#                         9.3231125460020223e-05, 0.4055262973766075, 5.7702680218083788, 23.363277764201879, 0.0028549414772708294, 0.302206474245307, 4.941285162221889, 23.277988655495722,
-#                         0.0014359084168929573, 2.9589257492660463, 34.789892456899928, 199.155521187571, 0.028159196603131532, 1.8280874132112894, 27.480577660843128, 193.17394439425698,
-#                         9.2130763213018216e-05, 0.40860025281738827, 5.8145671939487569, 23.540932319313097, 0.00244098861287643, 0.25167866126747163, 4.584184889494459, 22.823248424702911,
-#                         0.0036327944220670566, 3.5264235004757332, 41.675568874054385, 243.98480482142989, 0.12371911836087085, 3.359101678325652, 39.191517890840728, 250.20880562864915,
-#                         0.00023307781365005057, 0.48039029051275167, 6.8604554697200744, 28.515326793779568, 0.010860258255956401, 0.45867978991759534, 6.447371140471458, 29.243130682933774,
-#                         0.0035887605502844255, 3.5330306004422876, 41.751905261773949, 244.35279439351532, 0.1332688418541457, 3.3123077170700248, 38.960190557544117, 249.76135046883817,
-#                         0.00023025262803004997, 0.48133688349786574, 6.873801355991584, 28.561414642766923, 0.011665953328123136, 0.4501173634939864, 6.3962088536079387, 29.172954946738262]
-#
-# print("flowdiff_totyears", flowdiff_totyears)
-# print("loadreduced_totyears", loadreduced_totyears)
 
 loadreduced = [None] * len(loadreduced_totyears)
 for i in range(len(loadreduced_totyears)):
@@ -67,6 +49,7 @@ print("loadreducedP", loadreducedP)
 print("loadreducedTSS", loadreducedTSS)
 print("loadreducedZn", loadreducedZn)
 
+
 def greenopt(*vars):
     """runs the optimization, each candidate solution yields a set of decision variables (vars) for which objective
     function values are determined. Whether the constraints are satisfied is also evaluated."""
@@ -84,7 +67,7 @@ def greenopt(*vars):
     for m in range(msets):
         for i in range(len(indexmat[m])):
             actarea_treated[v] = math.trunc(vars[v]) * par.unitarea   # eg for available area of 100 acres, dec vars
-            runred += actarea_treated[v] * flowdiff[v] # flowdiff.iloc[v, 0]        # would be from 0-200 with 0.5-acre increments
+            runred += actarea_treated[v] * flowdiff[v] # flowdiff.iloc[v, 0] # would be from 0-200 with 0.5-acre increments
             # runoff reduction in units of acre-ft
             if sum(loadreducedN) > 0:
                 reduction_loadN   += actarea_treated[v] * loadreducedN[v]

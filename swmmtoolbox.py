@@ -540,8 +540,9 @@ def extract(filename, *labels):
             pd.Series(values),
             columns=['{0}_{1}_{2}'.format(
                 itemtype, name, obj.varcode[typenumber][int(variableindex)])]))
-    result = pd.concat(jtsd, axis=1, join_axes=[jtsd[0].index])
-    return tsutils.printiso(result)
+    result = pd.concat(jtsd, axis=1).reindex(jtsd[0].index)
+    return result
+    # return tsutils._printiso(result)
 
 
 def main():

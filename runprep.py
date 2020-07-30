@@ -45,6 +45,7 @@ print("df_wmost_load[0].iloc[92:103]\n", df_wmost_load[0].iloc[92:103])
 # EIA      vec double   #  effective impervious area
 # infilt   vec double   #  infiltration rate of the HRU
 HRU_ID, A_base, EIA, infilt = read.Excel_LC1(par.filename_wmost, par.shtname_LC, par.col_baseA, par.row_baseA)
+print("HRU_ID", HRU_ID)
 
 """read in the stormwater (GI) inputs, the user-selected 'managed sets' ie combo of GI option and design depth"""
 # GI_ID       str       names of stormwater GI
@@ -68,14 +69,15 @@ if GI_ID:
     # GI_wid      width of user-selected GI
     # GI_len      length of user-selected GI
     HRU_imp, A_imp, indexhrus = calcs.impervious(HRU_ID, A_base, EIA)
-    par.n_imp = len(HRU_imp)
+    print("HRU_imp", HRU_imp)
+    print("indexhrus", indexhrus)
+    par.n_imp = len(countvec) # len(HRU_imp)
     print("par.n_imp", par.n_imp)
 
     if par.sizebyarea is True:
         GI_wid, GI_len = calcs.GI_size_byarea(par.n_imp, GI_ID)
     else:
         GI_wid, GI_len = calcs.GI_size_byvolume(par.n_imp, par.EIA_imp, GI_ID, GI_ddepth)
-
 
     GI_area = [GI_len[i] * GI_wid[i] for i in range(len(GI_len))]
     print("GI_area:", GI_area)
@@ -99,7 +101,7 @@ if GI_ID:
 
     """read characteristics file to get in on hydraulic conductivity for different HRU types and sort by imp HRUs"""
     hydcond = read.character_csv(par.catchmname, par.fileend_char)
-    par.K_imp = [hydcond[countvec[x]] for x in range(len(indexhrus))]
+    par.K_imp = [hydcond[countvec[x]] for x in range(len(countvec))]
     print("K_imp", par.K_imp)
 
     """initialize variables"""
@@ -153,7 +155,8 @@ if GI_ID:
                 elif par.poi[p] is 1:
                     loadP_wGI_all = pd.concat([loadP_wGI_all, load_wGI], axis=1)
                     print("loadP_wGI_all", loadP_wGI_all.iloc[92:103])
-            else: print("swmmtoolbox not used for loads")
+            else:
+                print("swmmtoolbox not used for loads")
 
         """read detailed LID output file for each HRU of the managed set (for the last pollutant simulated)"""
         for i in range(len(indexmat[n])):
@@ -188,10 +191,6 @@ if GI_ID:
     flowdiff = flow_HRUS.subtract(flow_HRUL)
     print("flow reduction (cfs)\n", flowdiff)
     flowdiff = flowdiff.multiply(3600 / 43560 * 12)
-    # for n in range (len(GI_ID)):
-    #    nHRU = len(indexmat[n])
-    #    for i in range(nHRU):
-    #        flowdiff = flowdiff.multiply(3600*1/GI_area[i * len(GI_ID) + n])
 
     print("flow reduction (ft over the LID subcatchment)\n", flowdiff)
 
@@ -229,9 +228,8 @@ if GI_ID:
 
     for p in range(len(par.poi)):
         df_conc[p] = df_wmost_load_relev[p].divide(df_wmost_flow_relev)
-        df_conc[p] =  df_conc[p].fillna(0)
+        df_conc[p] = df_conc[p].fillna(0)
         df_conc[p] = df_conc[p].replace(np.inf, 0.0)
-        # df_conc[p] = df_conc[p].apply(lambda x: [y if y < 20 else 20.0 for y in x])  # use in cases with to deal with super small denom causing unrealistically high conc.
         print("df_conc[p]", df_conc[p])
 
     """obtain external load for HRUs given by indexmat and then condense the load timseries based on hoursindex, which

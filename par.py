@@ -4,13 +4,12 @@
 excelfolder    = "_excel"
 catchmname   = excelfolder + "/" + "taunton"
 
-filename_wmost = excelfolder + "/" + "WMOSTv3_wadingthreemile00-05_smallerdepths.xlsm" # "WMOSTv3_wadingthreemile2005.xlsm" # "WMOSTv3.01_12052018corrd6.xlsm" # "mde_userinputs_reord.xlsm"
+filename_wmost = excelfolder + "/" + "WMOSTv3_00-04.xlsm"
 filename_GI    = excelfolder + "/" + "BMP-Config.csv"
 
-fileend_char   = "_Characteristics2.csv" # "_combine_characteristic_file_2014_HRUarea_nonforested_reord.csv"
-fileend_H =    "_HSPF_3.3_19.5_recharge_adj.csv"
-fileend_L =    ["_Loadings_TN_3.3_19.5.csv", "_Loadings_TP_3.3_19.5.csv"]
-
+fileend_char   = "_Characteristics2.csv"
+fileend_H = "_hydrology.csv"
+fileend_L = ["_Loadings_TN.csv", "_Loadings_TP.csv"]
 
 shtname_H      = "Hydro"
 shtname_LC     = "Land Use"
@@ -57,15 +56,16 @@ tot_GIs = 18    # should be the number of rows in the BMP_Config file, minus 1
 poi   = [0, 1]     # poi = pollt of interest indicated by user in this order: [TN, TP, TSS, ZN] - e.g. 1 for TP
 nobjs = 3
 ncons = 1
-NFE   = 500000
-epsilons = [1000000, 1000, 1000] #, 50]
-reductiontarget_N = 11005 #12855 #11267 #11239 #12887 baseline
+NFE   = 1000000
+epsilons = [1000000, 1000, 1000]
+reductiontarget_N = 22627
 
 
 """simulation options"""
 sizebyarea = False
 getoutlet_L = False
 FPlan = 1
+
 
 def init():
     global df_GI

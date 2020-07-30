@@ -199,7 +199,8 @@ def modelLID_wq(df_vols, BMP_Ai, BMP_datacol, df_conccond, percentrem_LID, kcoef
     massPrior_inBMP = 0
     mass_inBMP = np.zeros(nhrs)
     massExit = np.zeros(nhrs)
-    massExit[0] = volExit_hr.ix[0] * np.exp(-kcoeff * 1) * df_conccond.ix[0]  # 1 for 1 hour timestep
+    massExit[0] = volExit_hr.iloc[0] * np.exp(-kcoeff * 1) * df_conccond.iloc[0]  # 1 for 1 hour timestep
+    print("massExit[0]", massExit[0])
 
     # calculate mass in BMP, solve for conc in BMP, solve for new conc after 1st order decay
     for t in range(1, nhrs):

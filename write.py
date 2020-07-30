@@ -1,7 +1,13 @@
 """functions used to write the swmm input file and to write modified external runoff and loading data timeseries,
     including:
     - external
-    - swmminp"""
+    - writebio
+    - writetrench
+    - writerain
+    - writepave
+    - swmminp
+    - names
+    - optimset"""
 
 import math
 import matplotlib.pyplot as pl
@@ -16,6 +22,7 @@ def external(HRUs_imp, extroot, evaproot, data, indexhrus, pollt):
     files required for running SWMM."""
     # note that skiprows and nrows are determined using the start and end dates in function Excel_H_dates
     # need to call this function before calling writeswmminp function to create the external SURO files for SWMM
+    print("data", data.head())
 
     if extroot == par.extroot_flow:
         """reads the wmost hydrology file, gets the appropriate column, & creates the evaporation file for SWMM"""
@@ -27,21 +34,22 @@ def external(HRUs_imp, extroot, evaproot, data, indexhrus, pollt):
             print("zero evaporation")
             df_nz_evap = pd.concat([date.head(), df_evap.head()], axis=1)
         else:
-            df_nz_evap = df_evap.iloc[evap.nonzero()]  # find the nonzero values of PET
+            df_nz_evap = df_evap.iloc[evap.to_numpy().nonzero()]  # find the nonzero values of PET
 
         outfile_evap = evaproot + '.txt'
         df_nz_evap.to_csv(path_or_buf=outfile_evap, sep='\t', header=False, index=False)
 
         """creates the runoff file, input to SWMM as precip (per method)"""
         indexhrus = [x + 1 for x in indexhrus]  # shift up by 1 because of date column
-        for i in range(len(HRUs_imp)):
+        print('indexhrus', indexhrus)
+        for i in range(len(indexhrus)):  # changed from HRUs_imp
             vals = data.iloc[:, indexhrus[i]]
             if max(vals) == 0:  # to avoid an error if there's no runoff
                 print("zero runoff for HRU with indexhru = %d" % i)
                 df_nz = pd.concat([date.head(), vals.head()], axis=1)
             else:
                 df_temp = pd.concat([date, vals], axis=1)
-                df_nz = df_temp.iloc[vals.nonzero()]
+                df_nz = df_temp.iloc[vals.to_numpy().nonzero()]
 
             outfile = extroot+str(i)+'.txt'
             df_nz.to_csv(path_or_buf=outfile, sep='\t', header=False, index=False)
@@ -50,14 +58,14 @@ def external(HRUs_imp, extroot, evaproot, data, indexhrus, pollt):
         """creates the load file, input to SWMM at a node (per method)"""
         date = data.iloc[:, 0]  # grab the dates column
         indexhrus = [x + 1 for x in indexhrus]  # shift up by 1 because of date column
-        for i in range(len(HRUs_imp)):
+        for i in range(len(indexhrus)):  # changed from HRUs_imp
             vals = data.iloc[:, indexhrus[i]]
             if max(vals) == 0:  # to avoid an error if there's no load
                 print("zero loading for HRU with indexhru = %d" % i)
                 df_nz = pd.concat([date.head(), vals.head()], axis=1)
             else:
                 df_temp = pd.concat([date, vals], axis=1)
-                df_nz = df_temp.iloc[vals.nonzero()]
+                df_nz = df_temp.iloc[vals.to_numpy().nonzero()]
 
             outfile = extroot + pollt + '_' + str(i) + '.txt'
             df_nz.to_csv(path_or_buf=outfile, sep='\t', header=False, index=False)
@@ -422,3 +430,4 @@ def optimset(result, filename, nvars, msets, indexmat):
     pl.show()
 
     return
+

@@ -158,14 +158,10 @@ def detailedLID_hourly(filename, ustart_tstamp):
     (ie times for which there is no flow within the LID). Note that this function reads one detailed LID report file
     (for each HRU subcatchment) at a time, so it must be called in a loop"""
 
-    # df_LIDall = pd.read_csv(filename, sep='\t', header=6, index_col=False, dtype=np.float64, usecols=[0, 2, 3, 5, 7])
     df_LIDall = pd.read_csv(filename, sep='\t', header=6, index_col=False) # dtype=np.float64
     df_LIDall.columns = ['datetime', 'time', 'tot_inflow', 'evap', 'surf_infil', 'paveperc', 'soil_perc', 'stor_exfil',
                          'surf_runoff', 'drain_outflow', 'surf_level', 'pave_level', 'soil_moist', 'stor_level']
-    # df_LIDall.columns = ['time', 'tot_inflow', 'evap', 'surf_infil', 'soil_perc', 'stor_exfil',
-    #                      'surf_runoff', 'drain_outflow', 'surf_level', 'soil-pave_moist', 'stor_level']
 
-    # note when I run this on my laptop, there are fewer columns (come back need a solution)
     df_LID = df_LIDall[['time', 'evap', 'surf_infil',  'drain_outflow', 'stor_exfil']]
 
     if not df_LID[df_LID.index.duplicated()].empty:
@@ -194,7 +190,8 @@ def detailedLID_hourly(filename, ustart_tstamp):
         if len(volEnter_hr) < 1:
             print("please select at least an hour of data")
         unihours = hours.unique()
-        hours.set_value(max(hours.index) + 1, -9)
+        # hours.set_value(max(hours.index) + 1, -9)
+        hours.at[max(hours.index) + 1] = -9
         h = 0
         i = 0
         volIn = 0.
